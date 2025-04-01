@@ -2,8 +2,10 @@ package main
 
 import (
 	"admin-panel/database"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -14,18 +16,24 @@ func main() {
 	database.ConnectDB()
 	InitUserDB() // Initialize user collection
 
+	// Get PORT from environment variable
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8002" // Default for local testing
+	}
+
 	// Create Router
 	r := mux.NewRouter()
 	SetupRoutes(r)
 
-	//enabling cors
+	// Enabling CORS
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // Allow all origins (change if needed)
+		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 		AllowCredentials: true,
 	}).Handler(r)
 
-	log.Println("User Service running on port 8002...")
-	log.Fatal(http.ListenAndServe(":8002", corsHandler))
+	log.Println("User Service running on port", port)
+	log.Fatal(http.ListenAndServe(":"+port, corsHandler))
 }
