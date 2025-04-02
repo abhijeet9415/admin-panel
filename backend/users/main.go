@@ -22,6 +22,8 @@ func main() {
 		port = "8002" // Default for local testing
 	}
 
+        fmt.Println("Using PORT:", port)
+	
 	// Create Router
 	r := mux.NewRouter()
 	SetupRoutes(r)
