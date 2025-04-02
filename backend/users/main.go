@@ -2,8 +2,6 @@ package main
 
 import (
 	"admin-panel/database"
-	// "admin-panel/users"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,33 +13,26 @@ import (
 func main() {
 	// Initialize MongoDB connection
 	database.ConnectDB()
-	users.InitUserDB() // Ensure this function is correctly imported
+	InitUserDB() // Initialize user collection
 
-	// Get PORT from environment variable
+	// Get port from environment variable (Render provides this)
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("PORT environment variable not set")
+		port = "8002" // Default for local development
 	}
-
-	// Debug: Print the PORT variable
-	fmt.Println("Using PORT:", port)
 
 	// Create Router
 	r := mux.NewRouter()
-	users.SetupRoutes(r) // Ensure this function is correctly imported
+	SetupRoutes(r)
 
-	// Enabling CORS
+	//enabling cors
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"*"}, // Allow all origins (change if needed)
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 		AllowCredentials: true,
 	}).Handler(r)
 
-	// Start the server with the assigned PORT
-	log.Println("User Service running on port", port)
-	err := http.ListenAndServe("0.0.0.0:"+port, corsHandler) // 🚀 Bind to 0.0.0.0 instead of localhost
-	if err != nil {
-		log.Fatal("Server failed to start:", err)
-	}
+	log.Printf("Server starting on port %s", port)
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, corsHandler))
 }
