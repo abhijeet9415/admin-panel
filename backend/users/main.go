@@ -2,7 +2,6 @@ package main
 
 import (
 	"admin-panel/database"
-	"admin-panel/users"
 	"fmt"
 	"log"
 	"net/http"
