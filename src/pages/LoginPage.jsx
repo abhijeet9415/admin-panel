@@ -27,7 +27,7 @@ const LoginPage = () => {
     };
 
     try {
-      const response = await fetch("https://my-admin-panel-5d5p.onrender.com/users/login", {
+      const response = await fetch("https://admin-panel-with-go.onrender.com/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
