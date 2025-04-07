@@ -62,26 +62,35 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Log to check if name is received from frontend
+	// Log received data
 	fmt.Println("Received user data:", user)
 
+	// Hash the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 	if err != nil {
 		http.Error(w, "Error hashing password", http.StatusInternalServerError)
 		return
 	}
 	user.Password = string(hashedPassword)
-
 	user.ID = primitive.NewObjectID()
-	_, err = userDB.InsertOne(context.TODO(), user)
+
+	// Insert into MongoDB
+	result, err := userDB.InsertOne(context.TODO(), user)
 	if err != nil {
+		// 👇 Log the actual MongoDB error
+		fmt.Println("MongoDB InsertOne Error:", err)
 		http.Error(w, "Failed to register user", http.StatusInternalServerError)
 		return
 	}
 
+	// Log success
+	fmt.Println("User inserted with ID:", result.InsertedID)
+
+	// Send success response
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "User registered successfully"})
 }
+
 
 // Login User
 func LoginUser(w http.ResponseWriter, r *http.Request) {
