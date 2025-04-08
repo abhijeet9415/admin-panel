@@ -77,7 +77,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	// Insert into MongoDB
 	result, err := userDB.InsertOne(context.TODO(), user)
 	if err != nil {
-		// 👇 Log the actual MongoDB error
+		//  Log the actual MongoDB error
 		fmt.Println("MongoDB InsertOne Error:", err)
 		http.Error(w, "Failed to register user", http.StatusInternalServerError)
 		return

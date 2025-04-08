@@ -126,7 +126,7 @@ import {
                         <FormControlLabel control={<Checkbox />} label="Remember me" />
                       </FormGroup>
                       <Typography color="primary">
-                        <Link to="/login">Already have an account? Login</Link>
+                        <Link to="/">Already have an account? Login</Link>
                       </Typography>
                     </Stack>
                   </Stack>
