@@ -20,13 +20,13 @@ import {
   
       const formData = new FormData(e.target);
       const email = formData.get("email");
-      const newPassword = formData.get("newPassword");
+      const password = formData.get("newPassword");
   
       try {
         const response = await fetch("https://admin-panel-with-go.onrender.com/users/update-password", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, newPassword }),
+          body: JSON.stringify({ email, password }),
         });
   
         const data = await response.json();
