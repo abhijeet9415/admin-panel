@@ -91,7 +91,6 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "User registered successfully"})
 }
 
-
 // Login User
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var loginData User
@@ -151,6 +150,51 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		// Store user email in request header for further use
 		r.Header.Set("user_email", claims.Email)
 		next.ServeHTTP(w, r)
+	})
+}
+
+// Forget pasword func
+func UpdatePassword(w http.ResponseWriter, r *http.Request) {
+	var reqData struct {
+		Email       string `json:"email"`
+		NewPassword string `json:"new_password"`
+	}
+
+	// Decode request
+	if err := json.NewDecoder(r.Body).Decode(&reqData); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Check if user exists
+	var user User
+	err := userDB.FindOne(context.TODO(), bson.M{"email": reqData.Email}).Decode(&user)
+	if err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	// Hash new password
+	// hashedPwd, err := HashPassword(reqData.NewPassword)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+	if err != nil {
+		http.Error(w, "Error hashing password", http.StatusInternalServerError)
+		return
+	}
+	user.Password = string(hashedPassword)
+	
+
+	// Update password in DB
+	update := bson.M{"$set": bson.M{"password": hashedPassword}}
+	_, err = userDB.UpdateOne(context.TODO(), bson.M{"email": reqData.Email}, update)
+	if err != nil {
+		http.Error(w, "Failed to update password", http.StatusInternalServerError)
+		return
+	}
+
+	// Success
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "Password updated successfully",
 	})
 }
 

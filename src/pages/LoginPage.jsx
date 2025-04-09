@@ -114,7 +114,7 @@ const LoginPage = () => {
                       <FormControlLabel control={<Checkbox />} label="Remember me" />
                     </FormGroup>
                     <Typography color="error" fontWeight="bold">
-                      <Link to="#">Forgot password?</Link>
+                      <Link to="/forgot-password">Forgot password?</Link>
                     </Typography>
                   </Stack>
                 </Stack>
