@@ -6,6 +6,8 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
 import SavingsOutlinedIcon from '@mui/icons-material/SavingsOutlined';
 import SportsMotorsportsOutlinedIcon from '@mui/icons-material/SportsMotorsportsOutlined';
+import { useNavigate } from "react-router-dom";
+
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Typography, colors } from '@mui/material';
 import { images } from "../../assets";
@@ -13,9 +15,9 @@ import Animate from "./Animate";
 
 const menus = [
   {
-    title: "Inbox",
+    title: "Users",
     icon: <MailOutlinedIcon />,
-    state: "inbox"
+    state: "users"
   },
   {
     title: "Overview",
@@ -66,6 +68,8 @@ const investmentMenus = [
 ];
 
 const Sidebar = ({ sidebarWidth }) => {
+  const navigate = useNavigate();
+
   const activeState = "overview";
 
   // const container = window !== undefined ? () => window.document.body : undefined;
@@ -73,7 +77,9 @@ const Sidebar = ({ sidebarWidth }) => {
   const MenuItem = (props) => {
     return (
       <ListItem key={props.index} disableGutters disablePadding sx={{ py: 0.5 }}>
-        <ListItemButton sx={{
+        <ListItemButton 
+        onClick={() => navigate(`/dashboard/${props.item.state}`)}
+        sx={{
           borderRadius: "10px",
           bgcolor: props.isActive ? colors.green[600] : "",
           color: props.isActive ? colors.common.white : "",
