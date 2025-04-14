@@ -22,7 +22,7 @@ const menus = [
   {
     title: "Overview",
     icon: <DashboardCustomizeOutlinedIcon />,
-    state: "overview"
+    state: ""
   },
   {
     title: "Notification",
